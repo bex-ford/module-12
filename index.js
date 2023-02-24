@@ -1,8 +1,8 @@
-//& variables are containers for storing data 
+//& variables are containers for storing data
 const Manager = require("./lib/Manager");
 const Engineer = require("./lib/Engineer");
 const Intern = require("./lib/Intern");
-const Employee = require("./lib/Employee")
+const Employee = require("./lib/Employee");
 const inquirer = require("inquirer");
 const path = require("path");
 const fs = require("fs");
@@ -13,124 +13,104 @@ const fs = require("fs");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 
-const render = require("./src/page-template.js");
-
-// render(myArrayof team members)
-const testEmployee = new Employee ("name", "id", "email");
-console.log(testEmployee.getName()); 
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
+const render = require("./src/page-template.js");
+const team = [];
 // array of questions for manager
 //& prompt method is used for the user to input values
 const managerPrompt = () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "What is the manager's name?",
-    },
-    {
-      type: "input",
-      name: "id",
-      message: "What is the manager's id?",
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "What is the manager's email address?",
-    },
-    {
-      type: "input",
-      name: "officeNumber",
-      message: "What is the manager's office number?",
-    },
-  ]).then(respond =>{
-
-  })
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is the manager's name?",
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "What is the manager's id?",
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "What is the manager's email address?",
+      },
+      {
+        type: "input",
+        name: "officeNumber",
+        message: "What is the manager's office number?",
+      },
+    ])
+    .then((respond) => {
+      const manager = new Manager(
+        respond.name,
+        respond.id,
+        respond.email,
+        respond.officeNumber
+      );
+      team.push(manager);
+      askQuestion();
+    });
 };
+
+function askQuestion() {
+  inquirer
+    .prompt([
+      {
+        type: "list",
+        name: "name",
+        message: "Do you want to add?",
+        choices: ["Engineer", "Intern", "Quit"],
+      },
+    ])
+    .then((answers) => {
+      if (answers.name === "Engineer") {
+        employeePrompt();
+      } else if (answers.name === "Intern") {
+        internPrompt();
+      } else {
+        createHTMLFile();
+      }
+    });
+}
 
 // array of questions for employee
 //& prompt method is used for the user to input values
 const employeePrompt = () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "What is the engineer's name?",
-    },
-    {
-      type: "input",
-      name: "id",
-      message: "What is the engineer's id?",
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "What is the engineer's email address?",
-    },
-    {
-      type: "input",
-      name: "github",
-      message: "What is the engineer's GitHub username?",
-    },
-  ]).then(respond => {
-
-  })
-};
-
-// array of questions for employee
-//& prompt method is used for the user to input values
-const employee1Prompt = () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "What is the engineer's name?",
-    },
-    {
-      type: "input",
-      name: "id",
-      message: "What is the engineer's id?",
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "What is the engineer's email address?",
-    },
-    {
-      type: "input",
-      name: "github",
-      message: "What is the engineer's GitHub username?",
-    },
-  ]).then(respond => {
-
-  })
-};
-
-// array of questions for employee
-//& prompt method is used for the user to input values
-const employee2Prompt = () => {
-  inquirer.prompt([
-    {
-      type: "input",
-      name: "name",
-      message: "What is the engineer's name?",
-    },
-    {
-      type: "input",
-      name: "id",
-      message: "What is the engineer's id?",
-    },
-    {
-      type: "input",
-      name: "email",
-      message: "What is the engineer's email address?",
-    },
-    {
-      type: "input",
-      name: "github",
-      message: "What is the engineer's GitHub username?",
-    },
-  ]);
+  inquirer
+    .prompt([
+      {
+        type: "input",
+        name: "name",
+        message: "What is the engineer's name?",
+      },
+      {
+        type: "input",
+        name: "id",
+        message: "What is the engineer's id?",
+      },
+      {
+        type: "input",
+        name: "email",
+        message: "What is the engineer's email address?",
+      },
+      {
+        type: "input",
+        name: "github",
+        message: "What is the engineer's GitHub username?",
+      },
+    ])
+    .then((respond) => {
+      const engineer = new Engineer(
+        respond.name,
+        respond.id,
+        respond.email,
+        respond.github
+      );
+      team.push(engineer);
+      askQuestion();
+    });
 };
 
 // array of questions for intern
@@ -154,10 +134,14 @@ const internPrompt = () => {
     },
     {
       type: "input",
-      name: "github",
-      message: "What is the intern's GitHub username?",
+      name: "school",
+      message: "Which school did you attend?",
     },
-  ]);
+  ]).then((respond) => {
+    const intern = new Intern(respond.name, respond.id, respond.email, respond.school)
+    team.push (intern);
+    askQuestion()
+  })
 };
 
 // renders the HTML file
@@ -165,8 +149,12 @@ const internPrompt = () => {
 //& it returns a boolean value which indicates the presence of a file.
 //& node.js file system (fs) module allows you to work with the file system on your computer
 //& fs.mkdirSync() method is used to create a directory Synchronously
-const createHTMLFile = (htmlPage) => {
+const createHTMLFile = () => {
   if (!fs.existsSync(OUTPUT_DIR)) {
     fs.mkdirSync(OUTPUT_DIR);
   }
+const htmlpage = render(team)
+fs.writeFileSync(outputPath, htmlpage)
 };
+
+managerPrompt()

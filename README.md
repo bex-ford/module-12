@@ -8,15 +8,7 @@ Your task is to take the given starter code and convert it into a working Node.j
 
 As a manager a user want to generate a webpage that displays my team's basic info so that a user have quick access to their emails and GitHub profiles.
 
-
-This application used [Jest](https://www.npmjs.com/package/jest) for running the unit tests. The application will be invoked by using the following command:
-
-```bash
-npm tests
-```
-## Testing 
-
-![File Tree](assets/filetree.png)
+## Usage
 
 This application used [Inquirer](https://www.npmjs.com/package/inquirer) for collecting input from the user. The application will be invoked by using the following command:
 
@@ -24,10 +16,25 @@ This application used [Inquirer](https://www.npmjs.com/package/inquirer) for col
 node index.js
 ```
 
+This application used [Jest](https://www.npmjs.com/package/jest) for running the unit tests. The application will be invoked by using the following command:
+
+```bash
+npm tests
+```
+## Testing 
+Below is an image of the file tree related to the testing aspect of this application.
+![File Tree](assets/filetree.png)
+
 All tests passed:
 ![Tests](assets/tests.png)
 
+## Command Line
+The user is presented with a series of questions. Once the user has answered all questions the final result will be in the **output** folder.
+![Command Line](assets/commandline.png)
+
 ## Final Result 
+
+The final result as displayed below. 
 
 ![Final Result](assets/finalresult.png)
 

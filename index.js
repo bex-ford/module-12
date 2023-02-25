@@ -16,6 +16,7 @@ const outputPath = path.join(OUTPUT_DIR, "team.html");
 // TODO: Write Code to gather information about the development team members, and render the HTML file.
 const render = require("./src/page-template.js");
 const team = [];
+
 // array of questions for manager
 //& prompt method is used for the user to input values
 const managerPrompt = () => {
